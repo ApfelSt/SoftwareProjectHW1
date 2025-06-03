@@ -1,7 +1,7 @@
 import os
 import sys
 
-def kmeans(X, k, max_iters, eps=1e-3):
+def kmeans(X, k, max_iters=400, eps=1e-3):
     """
     Perform K-means clustering on the dataset X.
 
@@ -44,13 +44,16 @@ def kmeans(X, k, max_iters, eps=1e-3):
 
 
 def main():
-    """Usage: python3 kmeans.py <k> <max_iters> < <data_file>"""
-    if len(sys.argv) != 3:
+    """Usage: python3 kmeans.py <k> <max_iters> < <data_file> or python3 kmeans.py <k> < data_file.txt"""
+    if len(sys.argv) != 3 and len(sys.argv) != 2:
         print(main.__doc__)
         sys.exit(1)
 
     k = int(sys.argv[1])
-    max_iters = int(sys.argv[2])
+    if len(sys.argv) == 2:
+        max_iters = 400  # Default value
+    else:
+        max_iters = int(sys.argv[2])
 
     # Read data from stdin
     X = []
