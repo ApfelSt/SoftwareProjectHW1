@@ -1,3 +1,6 @@
+import os
+import sys
+
 def kmeans(X, k, max_iters, eps=1e-3):
     """
     Perform K-means clustering on the dataset X.
@@ -32,8 +35,38 @@ def kmeans(X, k, max_iters, eps=1e-3):
 
         # Check convergence
         if all(sum((n - o) ** 2 for n, o in zip(new_c, old_c)) < eps for new_c, old_c in zip(new_centroids, centroids)):
+            centroids = new_centroids
             break
         
         centroids = new_centroids
 
     return centroids
+
+
+def main():
+    """Usage: python3 kmeans.py <k> <max_iters> < <data_file>"""
+    if len(sys.argv) != 3:
+        print(main.__doc__)
+        sys.exit(1)
+
+    k = int(sys.argv[1])
+    max_iters = int(sys.argv[2])
+
+    # Read data from stdin
+    X = []
+    for line in sys.stdin:
+        # split by a comma
+        point = list(map(float, line.strip().split(',')))
+        X.append(point)
+
+    # Perform K-means clustering
+    centroids = kmeans(X, k, max_iters)
+
+    # Print the final centroids with 4 decimal places
+    for centroid in centroids:
+        print(','.join(f"{c:.4f}" for c in centroid))
+
+
+if __name__ == "__main__":
+    main()
+
