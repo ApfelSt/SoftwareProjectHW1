@@ -237,7 +237,9 @@ int main(int argc, char *argv[]) {
 
 ----------------------------------------------------------------
 */
-
+/* TODO: check that we do not use float and if so then use double instead */
+/* TODO: only use stdlib.h, math.h, and stdio.h. currently we use string.h for memcpy */
+/* TODO: check any other requirements for the C code */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -483,6 +485,8 @@ int main(int argc, char *argv[]) {
 
     k = atoi(argv[1]);
     max_iters = (argc == 3) ? atoi(argv[2]) : 400;
+
+    /* TODO: Check if k and max_iters are within valid ranges */
 
     /* Initialize variables */
     n = 0;

@@ -55,6 +55,8 @@ def main():
     else:
         max_iters = int(sys.argv[2])
 
+    #TODO: check if k and max_iters are within valid ranges and print an error message if not
+
     # Read data from stdin
     X = []
     for line in sys.stdin:
