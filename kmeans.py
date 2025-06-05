@@ -1,7 +1,7 @@
 import os
 import sys
 
-def kmeans(X, k, max_iters=400, eps=1e-3):
+def kmeans(X, k, iter=400, eps=1e-3):
     """
     Perform K-means clustering on the dataset X.
 
@@ -9,14 +9,14 @@ def kmeans(X, k, max_iters=400, eps=1e-3):
     X : array-like of points in R^d
         The dataset to cluster.
     k : int
-    max_iters : int
+    iter : int
     eps : float
     """
 
     # The initial centroids are the first k points in X
     centroids = [X[i] for i in range(k)]
     
-    for _ in range(max_iters):
+    for _ in range(iter):
         # Assign points to the nearest centroid
         clusters = [[] for _ in range(k)]
         for point in X:
@@ -44,18 +44,16 @@ def kmeans(X, k, max_iters=400, eps=1e-3):
 
 
 def main():
-    """Usage: python3 kmeans.py <k> <max_iters> < <data_file> or python3 kmeans.py <k> < data_file.txt"""
+    """Usage: python3 kmeans.py <k> <iter> < <data_file> or python3 kmeans.py <k> < data_file.txt"""
     if len(sys.argv) != 3 and len(sys.argv) != 2:
         print(main.__doc__)
         sys.exit(1)
 
     k = int(sys.argv[1])
     if len(sys.argv) == 2:
-        max_iters = 400  # Default value
+        iter = 400  # Default value
     else:
-        max_iters = int(sys.argv[2])
-
-    #TODO: check if k and max_iters are within valid ranges and print an error message if not
+        iter = int(sys.argv[2])
 
     # Read data from stdin
     X = []
@@ -64,8 +62,15 @@ def main():
         point = list(map(float, line.strip().split(',')))
         X.append(point)
 
+    if not sys.argv[1].isdigit() or k <= 1 or k >= len(X):
+        print("Incorrect number of clusters!")
+        sys.exit(1)
+    if len(sys.argv) != 2 and (not sys.argv[2].isdigit() or iter <= 1 or iter >= 1000):
+        print("Incorrect maximum iteration!")
+        sys.exit(1)
+
     # Perform K-means clustering
-    centroids = kmeans(X, k, max_iters)
+    centroids = kmeans(X, k, iter)
 
     # Print the final centroids with 4 decimal places
     for centroid in centroids:

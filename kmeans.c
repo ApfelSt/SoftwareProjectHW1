@@ -1,6 +1,3 @@
-/* TODO: check that we do not use float and if so then use double instead */
-/* TODO: only use stdlib.h, math.h, and stdio.h. currently we use string.h for memcpy */
-/* TODO: check any other requirements for the C code */
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -20,7 +17,7 @@ void kmeans(double **X, int n, int d, int k, int max_iters, double eps, double *
 
     clusters = malloc(n * sizeof(int));
     if (clusters == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "An Error Has Occurred\n");
         exit(1);
     }
 
@@ -45,14 +42,14 @@ void kmeans(double **X, int n, int d, int k, int max_iters, double eps, double *
 
         new_centroids = malloc(k * sizeof(double *));
         if (new_centroids == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
+            fprintf(stderr, "An Error Has Occurred\n");
             free(clusters);
             exit(1);
         }
         for (j = 0; j < k; j++) {
             new_centroids[j] = calloc(d, sizeof(double));
             if (new_centroids[j] == NULL) {
-                fprintf(stderr, "Memory allocation failed\n");
+                fprintf(stderr, "An Error Has Occurred\n");
                 for (i = 0; i < j; i++) {
                     free(new_centroids[i]);
                 }
@@ -64,7 +61,7 @@ void kmeans(double **X, int n, int d, int k, int max_iters, double eps, double *
 
         counts = calloc(k, sizeof(int));
         if (counts == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
+            fprintf(stderr, "An Error Has Occurred\n");
             for (j = 0; j < k; j++) {
                 free(new_centroids[j]);
             }
@@ -136,7 +133,7 @@ void print_centroids(double **centroids, int k, int d) {
 }
 
 int main(int argc, char *argv[]) {
-    int k, max_iters, n, d, i, dim, capacity;
+    int k, max_iters, n, d, i, dim, capacity, good_cluster_count, good_iter_count;
     double **X, **centroids;
     char line[1024];
     char *token;
@@ -149,7 +146,6 @@ int main(int argc, char *argv[]) {
     k = atoi(argv[1]);
     max_iters = (argc == 3) ? atoi(argv[2]) : 400;
 
-    /* TODO: Check if k and max_iters are within valid ranges */
 
     /* Initialize variables */
     n = 0;
@@ -157,7 +153,7 @@ int main(int argc, char *argv[]) {
     capacity = 10;
     X = malloc(capacity * sizeof(double *));
     if (X == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "An Error Has Occurred\n");
         return 1;
     }
 
@@ -167,7 +163,7 @@ int main(int argc, char *argv[]) {
             capacity *= 2;
             X = realloc(X, capacity * sizeof(double *));
             if (X == NULL) {
-                fprintf(stderr, "Memory allocation failed\n");
+                fprintf(stderr, "An Error Has Occurred\n");
                 for (i = 0; i < n; i++) {
                     free(X[i]);
                 }
@@ -185,7 +181,7 @@ int main(int argc, char *argv[]) {
             if (dim == 0) {
                 X[n] = malloc(10 * sizeof(double));
                 if (X[n] == NULL) {
-                    fprintf(stderr, "Memory allocation failed\n");
+                    fprintf(stderr, "An Error Has Occurred\n");
                     for (i = 0; i < n; i++) {
                         free(X[i]);
                     }
@@ -195,7 +191,7 @@ int main(int argc, char *argv[]) {
             } else if (dim % 10 == 0) {
                 X[n] = realloc(X[n], (dim + 10) * sizeof(double));
                 if (X[n] == NULL) {
-                    fprintf(stderr, "Memory allocation failed\n");
+                    fprintf(stderr, "An Error Has Occurred\n");
                     for (i = 0; i < n; i++) {
                         free(X[i]);
                     }
@@ -210,7 +206,7 @@ int main(int argc, char *argv[]) {
         if (d == 0) {
             d = dim; 
         } else if (dim != d) {
-            fprintf(stderr, "Inconsistent dimensions in input\n");
+            fprintf(stderr, "An Error Has Occurred\n");
             for (i = 0; i <= n; i++) {
                 free(X[i]);
             }
@@ -221,10 +217,56 @@ int main(int argc, char *argv[]) {
         n++;
     }
 
+    /*Checking input*/
+    good_cluster_count = 1;
+    if (argv[1] == NULL || *argv[1] == '\0'){
+        good_cluster_count = 0;
+    }
+    for (char* p = argv[1]; *p != '\0'; p++) {
+        if (*p < '0' || *p > '9'){
+            good_cluster_count = 0;
+        }
+    }
+    if (k <= 1 || k >= n){
+        good_cluster_count = 0;
+    }
+    if (!good_cluster_count) {
+        fprintf(stderr, "Incorrect number of clusters!\n");
+        for (i = 0; i < n; i++) {
+            free(X[i]);
+        }
+        free(X);
+        return 1;
+    }
+    
+    good_iter_count = 1;
+    if (argc == 3){
+        if (argv[2] == NULL || *argv[2] == '\0') {
+            good_iter_count = 0;
+        }
+        for (char* p = argv[2]; *p != '\0'; p++) {
+            if (*p < '0' || *p > '9') {
+                good_iter_count = 0;
+            }
+        }
+    }
+    if (max_iters <= 1 || max_iters >= 1000) {
+        good_iter_count = 0;
+    }
+    if (!good_iter_count) {
+        fprintf(stderr, "Incorrect maximum iteration!\n");
+        for (i = 0; i < n; i++) {
+            free(X[i]);
+        }
+        free(X);
+        return 1;
+    }
+
+
     /* Allocate memory for centroids */
     centroids = malloc(k * sizeof(double *));
     if (centroids == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
+        fprintf(stderr, "An Error Has Occurred\n");
         for (i = 0; i < n; i++) {
             free(X[i]);
         }
@@ -234,7 +276,7 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < k; i++) {
         centroids[i] = malloc(d * sizeof(double));
         if (centroids[i] == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
+            fprintf(stderr, "An Error Has Occurred\n");
             for (dim = 0; dim < i; dim++) {
                 free(centroids[dim]);
             }
