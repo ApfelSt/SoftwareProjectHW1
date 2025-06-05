@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     int k, max_iters, n, d, i, dim, capacity, good_cluster_count, good_iter_count;
     double **X, **centroids;
     char line[1024];
-    char *token;
+    char *token, *p;
 
     if (argc != 3 && argc != 2) {
         fprintf(stderr, "Usage: %s <k> <max_iters> or %s <k>\n", argv[0], argv[0]);
@@ -222,7 +222,7 @@ int main(int argc, char *argv[]) {
     if (argv[1] == NULL || *argv[1] == '\0'){
         good_cluster_count = 0;
     }
-    for (char* p = argv[1]; *p != '\0'; p++) {
+    for (p = argv[1]; *p != '\0'; p++) {
         if (*p < '0' || *p > '9'){
             good_cluster_count = 0;
         }
@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {
         if (argv[2] == NULL || *argv[2] == '\0') {
             good_iter_count = 0;
         }
-        for (char* p = argv[2]; *p != '\0'; p++) {
+        for (p = argv[2]; *p != '\0'; p++) {
             if (*p < '0' || *p > '9') {
                 good_iter_count = 0;
             }
