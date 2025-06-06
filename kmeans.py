@@ -72,7 +72,7 @@ def main():
     if not integer_check_in_range(sys.argv[1], 1, len(X)):
         print("Incorrect number of clusters!")
         sys.exit(1)
-    if not integer_check_in_range(sys.argv[2], 1, 1000):
+    if len(sys.argv) == 3 and not integer_check_in_range(sys.argv[2], 1, 1000):
         print("Incorrect maximum iteration!")
         sys.exit(1)
 
