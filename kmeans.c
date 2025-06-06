@@ -241,7 +241,7 @@ int main(int argc, char *argv[]) {
 
     /*Checking input*/
     if (!integer_check_in_range(argv[1], 1, n)) {
-        fprintf(stderr, "Incorrect number of clusters!\n");
+        printf("Incorrect number of clusters!\n");
         for (i = 0; i < n; i++) {
             free(X[i]);
         }
@@ -250,7 +250,7 @@ int main(int argc, char *argv[]) {
     }
     
     if (argc == 3 && !integer_check_in_range(argv[2], 1, 1000)) {
-        fprintf(stderr, "Incorrect maximum iteration!\n");
+        printf("Incorrect maximum iteration!\n");
         for (i = 0; i < n; i++) {
             free(X[i]);
         }
