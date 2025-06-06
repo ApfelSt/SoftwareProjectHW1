@@ -79,7 +79,7 @@ def main():
         print("Incorrect maximum iteration!")
         sys.exit(1)
 
-    k = int(sys.argv[1])
+    k = int(float(sys.argv[1]))
     if len(sys.argv) == 2:
         iter = 400  # Default value
     else:
