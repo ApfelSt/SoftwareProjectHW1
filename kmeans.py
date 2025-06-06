@@ -83,7 +83,7 @@ def main():
     if len(sys.argv) == 2:
         iter = 400  # Default value
     else:
-        iter = int(sys.argv[2])
+        iter = int(float(sys.argv[2]))
     
     # Perform K-means clustering
     centroids = kmeans(X, k, iter)
