@@ -26,7 +26,7 @@ def kmeans(X, k, iter=400, eps=1e-3):
 
         # Update centroids
         new_centroids = []
-        for i, cluster in clusters:
+        for i, cluster in enumerate(clusters):
             if cluster:  # Avoid division by zero
                 new_centroid = [sum(dim) / len(cluster) for dim in zip(*cluster)] 
                 new_centroids.append(new_centroid)
