@@ -8,16 +8,13 @@ int integer_check_in_range (const char *str, int lower_limit, int higer_limit) {
     int value;
     value = atoi(str);
     if (value <= lower_limit || value >= higer_limit) {
-        printf("a\n");
         return 0;
     }
     if (*str == '\0') {
-        printf("b\n");
         return 0;
     }
     while (*str && *str != '.') {
         if (*str < '0' || *str > '9') {
-            printf("c%c\n", *str);
             return 0;
         }
         str++;
@@ -26,7 +23,6 @@ int integer_check_in_range (const char *str, int lower_limit, int higer_limit) {
         str++;
         while (*str) {
             if (*str != '0') {
-                printf("d%c\n", *str);
                 return 0;
             }
             str++;
