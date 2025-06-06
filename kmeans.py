@@ -4,7 +4,10 @@ import sys
 # convert the following c code to python:
 def integer_check_in_range(str, lower_limit, upper_limit):
     try:
-        value = int(float(str))
+        value = float(str)
+        if value != int(value):
+            return False
+        value = int(value)
         if lower_limit < value < upper_limit:
             return True
         else:
