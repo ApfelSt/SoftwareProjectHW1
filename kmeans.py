@@ -26,12 +26,12 @@ def kmeans(X, k, iter=400, eps=1e-3):
 
         # Update centroids
         new_centroids = []
-        for cluster in clusters:
+        for i, cluster in clusters:
             if cluster:  # Avoid division by zero
                 new_centroid = [sum(dim) / len(cluster) for dim in zip(*cluster)] 
                 new_centroids.append(new_centroid)
             else:
-                new_centroids.append(random.choice(X))  # Reinitialize if empty
+                new_centroids.append(centroids[i])
 
         # Check convergence
         if all(sum((n - o) ** 2 for n, o in zip(new_c, old_c)) < eps for new_c, old_c in zip(new_centroids, centroids)):

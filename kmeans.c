@@ -2,11 +2,33 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-#include <float.h>
 
-#ifndef INFINITY
-#define INFINITY DBL_MAX
-#endif
+
+int integer_check_in_range (const char *str, int lower_limit, int higer_limit) {
+    int value;
+    value = atoi(str);
+    if (value <= lower_limit || value >= higer_limit) {
+        return 0;
+    }
+    if (*str == '\0') {
+        return 0;
+    }
+    while (*str && *str != '.') {
+        if (*str < '0' || *str > '9') {
+            return 0;
+        }
+        str++;
+    }
+    if (*str == '.') {
+        while (*str) {
+            if (*str != '0') {
+                return 0;
+            }
+            str++;
+        }
+    }
+    return 1;
+}
 
 void kmeans(double **X, int n, int d, int k, int max_iters, double eps, double **centroids) {
     int *clusters;
@@ -27,13 +49,13 @@ void kmeans(double **X, int n, int d, int k, int max_iters, double eps, double *
 
     for (iter = 0; iter < max_iters; iter++) {
         for (i = 0; i < n; i++) {
-            min_dist = INFINITY;
+            min_dist = -1.0;
             for (j = 0; j < k; j++) {
                 dist = 0.0;
                 for (l = 0; l < d; l++) {
                     dist += (X[i][l] - centroids[j][l]) * (X[i][l] - centroids[j][l]);
                 }
-                if (dist < min_dist) {
+                if (dist < min_dist || min_dist < 0.0) {
                     min_dist = dist;
                     clusters[i] = j;
                 }
@@ -133,7 +155,7 @@ void print_centroids(double **centroids, int k, int d) {
 }
 
 int main(int argc, char *argv[]) {
-    int k, max_iters, n, d, i, dim, capacity, good_cluster_count, good_iter_count;
+    int k, max_iters, n, d, i, dim, capacity;
     double **X, **centroids;
     char line[1024];
     char *token, *p;
@@ -218,19 +240,7 @@ int main(int argc, char *argv[]) {
     }
 
     /*Checking input*/
-    good_cluster_count = 1;
-    if (argv[1] == NULL || *argv[1] == '\0'){
-        good_cluster_count = 0;
-    }
-    for (p = argv[1]; *p != '\0'; p++) {
-        if (*p < '0' || *p > '9'){
-            good_cluster_count = 0;
-        }
-    }
-    if (k <= 1 || k >= n){
-        good_cluster_count = 0;
-    }
-    if (!good_cluster_count) {
+    if (!integer_check_in_range(argv[1], 1, n)) {
         fprintf(stderr, "Incorrect number of clusters!\n");
         for (i = 0; i < n; i++) {
             free(X[i]);
@@ -239,21 +249,7 @@ int main(int argc, char *argv[]) {
         return 1;
     }
     
-    good_iter_count = 1;
-    if (argc == 3){
-        if (argv[2] == NULL || *argv[2] == '\0') {
-            good_iter_count = 0;
-        }
-        for (p = argv[2]; *p != '\0'; p++) {
-            if (*p < '0' || *p > '9') {
-                good_iter_count = 0;
-            }
-        }
-    }
-    if (max_iters <= 1 || max_iters >= 1000) {
-        good_iter_count = 0;
-    }
-    if (!good_iter_count) {
+    if (argc == 3 && !integer_check_in_range(argv[2], 1, 1000)) {
         fprintf(stderr, "Incorrect maximum iteration!\n");
         for (i = 0; i < n; i++) {
             free(X[i]);
@@ -261,7 +257,6 @@ int main(int argc, char *argv[]) {
         free(X);
         return 1;
     }
-
 
     /* Allocate memory for centroids */
     centroids = malloc(k * sizeof(double *));
