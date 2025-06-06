@@ -1,6 +1,18 @@
 import os
 import sys
 
+# convert the following c code to python:
+def integer_check_in_range(str, lower_limit, upper_limit):
+    try:
+        value = int(float(str))
+        if lower_limit < value < upper_limit:
+            return True
+        else:
+            return False
+    except:
+        return False
+    return False
+
 def kmeans(X, k, iter=400, eps=1e-3):
     """
     Perform K-means clustering on the dataset X.
@@ -49,11 +61,6 @@ def main():
         print(main.__doc__)
         sys.exit(1)
 
-    k = int(sys.argv[1])
-    if len(sys.argv) == 2:
-        iter = 400  # Default value
-    else:
-        iter = int(sys.argv[2])
 
     # Read data from stdin
     X = []
@@ -62,13 +69,19 @@ def main():
         point = list(map(float, line.strip().split(',')))
         X.append(point)
 
-    if not sys.argv[1].isdigit() or k <= 1 or k >= len(X):
+    if not integer_check_in_range(sys.argv[1], 1, len(X)):
         print("Incorrect number of clusters!")
         sys.exit(1)
-    if len(sys.argv) != 2 and (not sys.argv[2].isdigit() or iter <= 1 or iter >= 1000):
+    if not integer_check_in_range(sys.argv[2], 1, 1000):
         print("Incorrect maximum iteration!")
         sys.exit(1)
 
+    k = int(sys.argv[1])
+    if len(sys.argv) == 2:
+        iter = 400  # Default value
+    else:
+        iter = int(sys.argv[2])
+    
     # Perform K-means clustering
     centroids = kmeans(X, k, iter)
 
