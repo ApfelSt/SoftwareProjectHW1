@@ -158,7 +158,7 @@ int main(int argc, char *argv[]) {
     int k, max_iters, n, d, i, dim, capacity;
     double **X, **centroids;
     char line[1024];
-    char *token, *p;
+    char *token;
 
     if (argc != 3 && argc != 2) {
         fprintf(stderr, "Usage: %s <k> <max_iters> or %s <k>\n", argv[0], argv[0]);
